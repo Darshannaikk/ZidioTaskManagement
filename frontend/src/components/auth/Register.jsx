@@ -3,47 +3,48 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Container, Typography, Alert } from '@mui/material';
 
-interface FieldErrors {
-    username?: string;
-    email?: string;
-    password?: string;
-    general?: string;
-}
-
-const Register: React.FC = () => {
-    const [username, setUsername] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+const Register = () => {
+    const [formData, setFormData] = useState({
+        username: '',
+        email: '',
+        password: ''
+    });
+    const [fieldErrors, setFieldErrors] = useState({});
     const navigate = useNavigate();
 
-    const validateEmail = (email: string): boolean => {
+    const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
 
-    const validatePassword = (password: string): boolean => {
+    const validatePassword = (password) => {
         const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
         return passwordRegex.test(password);
     };
 
-    const handleSubmit = async (event: React.FormEvent) => {
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
         setFieldErrors({});
 
-        const errors: FieldErrors = {};
-        if (!username.trim()) errors.username = 'Username is required';
+        const errors = {};
+        if (!formData.username.trim()) errors.username = 'Username is required';
 
-        if (!email.trim()) {
+        if (!formData.email.trim()) {
             errors.email = 'Email is required';
-        } else if (!validateEmail(email)) {
+        } else if (!validateEmail(formData.email)) {
             errors.email = 'Invalid email format';
         }
 
-        if (!password.trim()) {
+        if (!formData.password.trim()) {
             errors.password = 'Password is required';
-        } else if (!validatePassword(password)) {
-            errors.password = 'Password must be at least 6 characters long, contain one uppercase letter, one numeric value, and one special character';
+        } else if (formData.password.length < 6) {
+            errors.password = 'Password must be at least 6 characters long';
+        } else if (!validatePassword(formData.password)) {
+            errors.password = 'Password must contain one uppercase letter, one numeric value, and one special character';
         }
 
         if (Object.keys(errors).length > 0) {
@@ -52,9 +53,9 @@ const Register: React.FC = () => {
         }
 
         try {
-            await axios.post('/api/users/register', { username, email, password });
+            await axios.post('/api/users/register', formData);
             navigate('/login');
-        } catch (err: any) {
+        } catch (err) {
             if (err.response?.data?.errors) {
                 setFieldErrors(err.response.data.errors);
             } else {
@@ -72,8 +73,9 @@ const Register: React.FC = () => {
             <form onSubmit={handleSubmit} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <TextField
                     label="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
                     required
                     fullWidth
                     error={!!fieldErrors.username}
@@ -82,9 +84,9 @@ const Register: React.FC = () => {
                 <TextField
                     label="Email"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     fullWidth
                     error={!!fieldErrors.email}
                     helperText={fieldErrors.email}
@@ -92,9 +94,9 @@ const Register: React.FC = () => {
                 <TextField
                     label="Password"
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
                     fullWidth
                     error={!!fieldErrors.password}
                     helperText={fieldErrors.password}
