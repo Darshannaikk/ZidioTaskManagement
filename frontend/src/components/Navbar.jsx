@@ -9,9 +9,7 @@ function Navbar() {
                     Zidio Task Management
                 </Link>
                 <div>
-                    <Link to="/login" className="mr-4">
-                        Login
-                    </Link>
+                    <Link to="/login" className="mr-4">Login</Link>
                     <Link to="/register">Register</Link>
                     <Link to="/dashboard">Dashboard</Link>
                 </div>
