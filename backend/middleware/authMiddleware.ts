@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import User, { IUser } from '../models/User';
+import User, { IUser } from '../models/User.js';
 import { Request, Response, NextFunction } from 'express';
 
 interface CustomRequest extends Request {
