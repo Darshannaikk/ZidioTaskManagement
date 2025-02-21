@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Container, Typography, Alert } from '@mui/material';
+import { TextField, Button, Container, Typography, Alert, Paper } from '@mui/material';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -65,50 +65,59 @@ const Register = () => {
     };
 
     return (
-        <Container maxWidth="xs" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
-            <Typography variant="h4" component="h1" gutterBottom>
-                Register
-            </Typography>
-            {fieldErrors.general && <Alert severity="error" style={{ width: '100%', marginBottom: '10px' }}>{fieldErrors.general}</Alert>}
-            <form onSubmit={handleSubmit} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <TextField
-                    label="Username"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    required
-                    fullWidth
-                    error={!!fieldErrors.username}
-                    helperText={fieldErrors.username}
-                />
-                <TextField
-                    label="Email"
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    fullWidth
-                    error={!!fieldErrors.email}
-                    helperText={fieldErrors.email}
-                />
-                <TextField
-                    label="Password"
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    fullWidth
-                    error={!!fieldErrors.password}
-                    helperText={fieldErrors.password}
-                />
-                <Button type="submit" variant="contained" color="primary" fullWidth>
+        <div className='min-h-screen flex px-4 bg-gradient-to-r from-blue-500 to-purple-600'>
+            <Container maxWidth="false" className="max-w-[350px] h-fit mt-30 flex flex-col items-center bg-white p-6 rounded-lg shadow-2xl shadow- shadow-black">
+                <Typography variant="h4" component="h1" gutterBottom className="text-gray-800 font-bold">
                     Register
-                </Button>
-            </form>
-            <Typography variant="body2" align="center" style={{ marginTop: '10px' }}>
-                Already have an account? <a href="/login" style={{ color: '#1976d2', textDecoration: 'none' }}>Login</a>
-            </Typography>
-        </Container>
+                </Typography>
+
+                {/* General Error Message */}
+                {fieldErrors.general && (
+                    <Alert severity="error" className="w-full mb-2">{fieldErrors.general}</Alert>
+                )}
+
+                <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
+                    <TextField
+                        label="Username"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        fullWidth
+                        error={!!fieldErrors.username}
+                        helperText={fieldErrors.username}
+                        className="bg-gray-50 rounded-md"
+                    />
+                    <TextField
+                        label="Email"
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        fullWidth
+                        error={!!fieldErrors.email}
+                        helperText={fieldErrors.email}
+                        className="bg-gray-50 rounded-md"
+                    />
+                    <TextField
+                        label="Password"
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        fullWidth
+                        error={!!fieldErrors.password}
+                        helperText={fieldErrors.password}
+                        className="bg-gray-50 rounded-md"
+                    />
+                    <Button type="submit" variant="contained" color="primary" fullWidth className="py-2 rounded-md">
+                        Register
+                    </Button>
+                </form>
+                <Typography variant="body2" align="center" className="text-gray-600">
+                    Already have an account? <a href="/login" className="text-blue-600 hover:underline">Login</a>
+                </Typography>
+            </Container>
+        </div>
     );
 };
 

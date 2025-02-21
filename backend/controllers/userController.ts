@@ -2,6 +2,7 @@ import User from '../models/User';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
+import mongoose from 'mongoose';
 import { Request, Response, NextFunction } from 'express';
 
 interface CustomRequest extends Request {
