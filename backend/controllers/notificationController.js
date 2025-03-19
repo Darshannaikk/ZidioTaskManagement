@@ -12,12 +12,14 @@ export const getNotifications = async (req, res) => {
             });
         }
 
-      
+        
         res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
         res.set('Pragma', 'no-cache');
         res.set('Expires', '0');
 
-      
+       :
+        
+        
         const notifications = await Notice.find({
             team: userId,
             isRead: { $ne: userId }

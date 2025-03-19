@@ -10,7 +10,7 @@ export const isTaskAssignee = async (req, res, next) => {
             return res.status(404).json({ status: false, message: "Task not found" });
         }
 
-        
+        // Allow access if user is admin or is assigned to the task
         if (req.user.isAdmin || task.team.includes(userId)) {
             next();
         } else {

@@ -1,37 +1,57 @@
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import dotenv from "dotenv";
-import express from "express";
-import morgan from "morgan";
-import { errorHandler, routeNotFound } from "./middlewares/errorMiddlewaves.js";
-import routes from "./routes/index.js";
-import { dbConnection } from "./utils/index.js";
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const { createServer } = require('http');
+const { Server } = require('socket.io');
+const dotenv = require('dotenv');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 dotenv.config();
 
-dbConnection();
-
-const PORT = process.env.PORT || 5000;
-
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+        credentials: true
+    }
+});
 
-app.use(
-  cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
-    methods: ["GET", "POST", "DELETE", "PUT"],
-    credentials: true,
-  })
-);
 
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true
+}));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.use(cookieParser());
 
-app.use(morgan("dev"));
-app.use("/api", routes);
+app.use('/api/notifications', notificationRoutes);
 
-app.use(routeNotFound);
-app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`Server listening on ${PORT}`));
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('join', (userId) => {
+        socket.join(userId);
+        console.log(`User ${userId} joined their room`);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
+
+
+app.set('io', io);
+
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/task_management')
+    .then(() => {
+        console.log('Connected to MongoDB');
+        httpServer.listen(process.env.PORT || 8800, () => {
+            console.log(`Server running on port ${process.env.PORT || 8800}`);
+        });
+    })
+    .catch((error) => {
+        console.error('MongoDB connection error:', error);
+    });
