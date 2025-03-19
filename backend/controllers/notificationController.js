@@ -17,7 +17,7 @@ export const getNotifications = async (req, res) => {
         res.set('Pragma', 'no-cache');
         res.set('Expires', '0');
 
-       :
+       
         
         
         const notifications = await Notice.find({

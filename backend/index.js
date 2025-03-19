@@ -1,10 +1,9 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const { createServer } = require('http');
-const { Server } = require('socket.io');
-const dotenv = require('dotenv');
-const notificationRoutes = require('./routes/notificationRoutes');
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import createServer from 'http';
+import dotenv from 'dotenv';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 dotenv.config();
 
